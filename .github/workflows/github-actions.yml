@@ -68,8 +68,12 @@ jobs:
 
       # step5: cleanup artifacts in dist_electron
       - name: cleanup artifacts
+        if: matrix.os == 'windows-latest'
         run: |
-          npx rimraf "dist/!(*.exe|*.dmg)"
+          npx rimraf "dist/!(*.exe)"
+        if: matrix.os == 'macos-latest'
+        run: |
+          npx rimraf "dist/!(*.dmg)"
 
       # step6: upload artifacts
       - name: upload artifacts
