@@ -47,7 +47,7 @@ jobs:
           key: ${{runner.OS}}-${{hashFiles('**/yarn.lock')}}
 
       # step3: npm install
-      - name: npm install
+      - name: install dependencies
         run: |
           yarn
 
