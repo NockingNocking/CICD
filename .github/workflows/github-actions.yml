@@ -21,7 +21,7 @@ jobs:
     # create a build matrix for jobs
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [windows-latest, macos-latest]
 
     # create steps
     steps:
@@ -50,26 +50,26 @@ jobs:
           yarn
 
       - name: build windows app
-        # if: matrix.os == 'windows-latest'
+        if: matrix.os == 'windows-latest'
         run: |
           yarn build:win
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
       - name: build mac app
-        # if: matrix.os == 'macos-latest'
+        if: matrix.os == 'macos-latest'
         run: |
           yarn build:mac
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
       - name: cleanup windows artifacts
-        # if: matrix.os == 'windows-latest'
+        if: matrix.os == 'windows-latest'
         run: |
           yarn rimraf "dist/!(*.exe)"
 
       - name: cleanup macos artifacts
-        # if: matrix.os == 'macos-latest'
+        if: matrix.os == 'macos-latest'
         run: |
           yarn rimraf "dist/!(*.dmg)"
 
@@ -87,13 +87,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
-      - name: FTP-Deploy-Action
-        uses: SamKirkland/FTP-Deploy-Action@2.0.0 # 使用的sftp插件，将项目传到服务器上，这里使用2.0版本，最新版本4.0不支持sftp
-        env:
-          FTP_SERVER: ${{ secrets.SERVER_IP }} # nginx服务器公网ip
-          FTP_USERNAME: ${{ secrets.USERNAME }} # nginx服务器用户名
-          FTP_PASSWORD: ${{ secrets.PASSWORD }} # nginx服务器密码
-          LOCAL_DIR: 'dist/**'
-          REMOTE_DIR: ${{ secrets.SERVER_DESTINATION }} # 放到nginx服务器上的什么位置
-          METHOD: sftp # 指定服务为sftp
-          PORT: ${{ secrets.SERVER_PORT }} # nginx服务器ssh端口
+      # - name: FTP-Deploy-Action
+      #   uses: SamKirkland/FTP-Deploy-Action@2.0.0 # 使用的sftp插件，将项目传到服务器上，这里使用2.0版本，最新版本4.0不支持sftp
+      #   env:
+      #     FTP_SERVER: ${{ secrets.SERVER_IP }} # nginx服务器公网ip
+      #     FTP_USERNAME: ${{ secrets.USERNAME }} # nginx服务器用户名
+      #     FTP_PASSWORD: ${{ secrets.PASSWORD }} # nginx服务器密码
+      #     LOCAL_DIR: 'dist/**'
+      #     REMOTE_DIR: ${{ secrets.SERVER_DESTINATION }} # 放到nginx服务器上的什么位置
+      #     METHOD: sftp # 指定服务为sftp
+      #     PORT: ${{ secrets.SERVER_PORT }} # nginx服务器ssh端口
