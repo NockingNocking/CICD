@@ -29,38 +29,30 @@ jobs:
 
     # create steps
     steps:
-      # step1: check out repository
       - name: Check out git repository
         uses: actions/checkout@v3.0.0
 
-      # step2: install node env
       - name: Install Node.js
         uses: actions/setup-node@v3.0.0
         with:
           node-version: '16'
 
-      #缓存依赖
       - name: Cache nodemodules
         uses: actions/cache@v1
         env:
           cache-name: cache-node-modules
         with:
-          # 需要缓存的文件的路径
           path: ./node_modules
-          # 对缓存的文件指定的唯一标识
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('./package.json') }}
-          # 用于没有再找目标key的缓存的backup选项
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
-      # step3: npm install
       - name: install dependencies
         run: |
           yarn
 
-      # step4: build app for mac/win
       - name: build windows app
         if: matrix.os == 'windows-latest'
         run: |
@@ -75,7 +67,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
-      # step5: cleanup artifacts in dist
       - name: cleanup windows artifacts
         if: matrix.os == 'windows-latest'
         run: |
@@ -86,14 +77,12 @@ jobs:
         run: |
           yarn rimraf "dist/!(*.dmg)"
 
-      # step6: upload artifacts
       - name: upload artifacts
         uses: actions/upload-artifact@v3.0.0
         with:
           name: ${{ matrix.os }}
           path: dist
 
-      # step7: create release
       - name: release
         uses: softprops/action-gh-release@v0.1.14
         if: startsWith(github.ref, 'refs/tags/')
@@ -102,7 +91,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
-      # step8:上传到服务器
       - name: FTP-Deploy-Action
       uses: SamKirkland/FTP-Deploy-Action@2.0.0 # 使用的sftp插件，将项目传到服务器上，这里使用2.0版本，最新版本4.0不支持sftp
       env:
