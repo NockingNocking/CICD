@@ -100,4 +100,4 @@ jobs:
           LOCAL_DIR: 'dist/**'
           REMOTE_DIR: ${{ secrets.SERVER_DESTINATION }} # 放到nginx服务器上的什么位置
           METHOD: sftp # 指定服务为sftp
-          PORT: ${{ SERVER_PORT }} # nginx服务器ssh端口
+          PORT: ${{ secrets.SERVER_PORT }} # nginx服务器ssh端口
