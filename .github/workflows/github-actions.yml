@@ -98,7 +98,7 @@ jobs:
           FTP_SERVER: ${{ secrets.SERVER_IP }} # nginx服务器公网ip
           FTP_USERNAME: ${{ secrets.USERNAME }} # nginx服务器用户名
           FTP_PASSWORD: ${{ secrets.PASSWORD }} # nginx服务器密码
-          LOCAL_DIR: 'dist/**'
+          LOCAL_DIR: './dist/'
           REMOTE_DIR: ${{ secrets.SERVER_DESTINATION }} # 放到nginx服务器上的什么位置
           METHOD: sftp # 指定服务为sftp
           PORT: ${{ secrets.SERVER_PORT }} # nginx服务器ssh端口
