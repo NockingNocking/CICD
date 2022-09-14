@@ -7,14 +7,10 @@ on:
     tags:
       - 'v*.*.*'
 env:
-  SERVER_PRIVATE_KEY: ${{ secrets.SERVER_PRIVATE_KEY }} # 服务器私钥
-  SERVER_HOST: ${{ secrets.SERVER_HOST }} # 服务器IP地址
-  USER_NAME: ${{ secrets.USER_NAME }} # 服务器用户名
   cache-name: note
 
 # Workflow's jobs
 jobs:
-  # job's id
   release:
     # job's name
     name: build and release electron app
@@ -25,7 +21,7 @@ jobs:
     # create a build matrix for jobs
     strategy:
       matrix:
-        os: [windows-latest, macos-latest]
+        os: [ubuntu-latest]
 
     # create steps
     steps:
@@ -54,26 +50,26 @@ jobs:
           yarn
 
       - name: build windows app
-        if: matrix.os == 'windows-latest'
+        # if: matrix.os == 'windows-latest'
         run: |
           yarn build:win
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
       - name: build mac app
-        if: matrix.os == 'macos-latest'
+        # if: matrix.os == 'macos-latest'
         run: |
           yarn build:mac
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
       - name: cleanup windows artifacts
-        if: matrix.os == 'windows-latest'
+        # if: matrix.os == 'windows-latest'
         run: |
           yarn rimraf "dist/!(*.exe)"
 
       - name: cleanup macos artifacts
-        if: matrix.os == 'macos-latest'
+        # if: matrix.os == 'macos-latest'
         run: |
           yarn rimraf "dist/!(*.dmg)"
 
